@@ -2,14 +2,73 @@
 <html>
   <head>
     <base target="_top">
-    <?!= include('style'); ?>
+    <?!= include('master_feedback_style'); ?>
+    <script>
+      // Prevent forms from submitting.
+      function preventFormSubmit() {
+        var forms = document.querySelectorAll('form');
+        for (var i = 0; i < forms.length; i++) {
+          forms[i].addEventListener('submit', function(event) {
+            event.preventDefault();
+          });
+        }
+      }
+      window.addEventListener('load', preventFormSubmit);
+
+      function handleFormSubmit(formObject) {
+        google.script.run.withSuccessHandler(onSuccess)
+           .withFailureHandler(onFailure)
+           .processForm(formObject);
+      }
+
+      function onFailure(error) {
+        var div = document.getElementById('output');
+        div.innerHTML = "ERROR: " + error.message;
+      
+      }
+      function onSuccess(context) {
+        var div = document.getElementById('output');
+        if (context && context.length == 0) {
+           div.innerHTML = 'Feedback saved successfully';
+        } else {
+           div.innerHTML = 'One or more feedback was not saved. Pls try again, or report this problem' + JSON.stringify(context);
+        }
+      }
+    </script>
   </head>
   <body>
-  <h1>Health of System</h1>
   
-  Configuration Information:
-  Master sheet with data: https://docs.google.com/spreadsheets/d/1oo3JCIeNRrZlJ2ZqaKFUxn3hlWh-gWjaMT7Y_-o1Opk/edit#gid=0
-  
-  
-</body>
+    <div class=center>You have been working closely with Prasanth for the past month or more. 
+    Please provide feedback on this person. Your feedback will help him grow. </div>
+   
+   <form id="myform" onsubmit="handleFormSubmit(this)">
+    <input type="hidden" name="feedback_for" value="p@gm.com" />
+    <div>
+        <label for="q1" class="right">If you wanted to brainstorm a particular problem with a person, for which of the following areas would you go to this person?</label>
+        <select type="select" id="q1" name="q1"> 
+        <option>Almost always, Yes</option>
+        <option >Sometimes, Yes</option>
+        <option >Almost always, No</option>
+        <option >Can't say/ Do not know</option>
+        </select>
+    </div>
+      <div>
+        <label for="q2" class="right">He/she stops by to discuss how my work is progressing</label>
+        <select type="select" id="q2" name="q2"> 
+        <option >    Yes - and his observations/comments are helpful</option>
+        <option >Yes - but he does this so often that it is not productive</option>
+        <option >No - he seldom reviews progress with me</option>
+
+        </select>
+    </div>
+
+
+    <div class="button">
+         <button type="submit">Submit</button>
+    </div>
+
+</form>
+     <div id="output"></div>
+ 
+  </body>
 </html>

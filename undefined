@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <?!= include('master_feedback_style'); ?>
+    <script>
+      function updateButton(content) {
+      var form = document.getElementById('form')
+      form.innerHTML = content;
+      }
+    </script>
+  </head>
+  <body>
+  
+    <div class=center id="form"></div>
+   
+   
+    <input type="button" value="Not Clicked"
+      onclick="google.script.run
+          .withSuccessHandler(updateButton)
+          .send_emails()" />
+
+  
+
+
+ 
+  </body>
+</html>
